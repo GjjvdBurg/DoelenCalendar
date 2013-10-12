@@ -65,6 +65,8 @@ def scrape_html(urls):
                 page = response.read()
                 if 'overlast van SPAM-bots' in page:
                     time.sleep(10)
+                    continue
+                break
             except URLError as exc:
                 wrn = (
                         "Er is een fout opgetreden bij het ophalen van de "
@@ -72,6 +74,7 @@ def scrape_html(urls):
                         "De URLError is: %s" % (url, exc.reason))
                 logger.warning(wrn)
                 time.sleep(5)
+                continue
         pages.append((url, page))
         logger.info("Successfully scraped url: %s" % url)
         count += 1
