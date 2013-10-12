@@ -10,7 +10,7 @@ class AdaptiveETA(Timer):
     def _update_samples(self, currval, elapsed):
         sample = (currval, elapsed)
         if not hasattr(self, 'samples'):
-            self.samples = [sample] + (self.NUM_SAMPLES + 1)
+            self.samples = [sample] * (self.NUM_SAMPLES + 1)
         else:
             self.samples.append(sample)
         return self.samples.pop(0)
