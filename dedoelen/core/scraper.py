@@ -64,10 +64,12 @@ def scrape_html(urls):
                 response = br.open(url)
                 page = response.read()
                 if 'overlast van SPAM-bots' in page:
+                    print('overlast van SPAM-bots')
                     time.sleep(10)
                     continue
                 break
             except URLError as exc:
+                print('Fout bij %s' % url)
                 wrn = (
                         "Er is een fout opgetreden bij het ophalen van de "
                         "pagina (%s). We proberen het over 5 seconden opnieuw. "
