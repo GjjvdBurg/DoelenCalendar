@@ -25,9 +25,9 @@ def voorstelling2event(voorstelling):
     event.add('summary', voorstelling.title)
     event.add('dtstart', voorstelling.tstart)
     event.add('dtend', voorstelling.tend)
-    event.add('dtstamp', datetime.now(settings.AMSTERDAM))
+    event.add('dtstamp', datetime.datetime.now(settings.AMSTERDAM))
     event['uid'] = str(hash(voorstelling))+'@doelenics.nl'
-    event.add('last-modified', datetime.now(settings.AMSTERDAM))
+    event.add('last-modified', datetime.datetime.now(settings.AMSTERDAM))
     event.add('description', '\n'.join([voorstelling.description,
         voorstelling.link]))
     event.add('organizer', 'doelen@doelenics.nl')
@@ -58,3 +58,4 @@ def event2voorstelling(event):
     else:
         voorstelling.description = '\n'.join(desc.split('\n')[:-1])
     voorstelling.sequence = int(event['sequence'])
+    return voorstelling

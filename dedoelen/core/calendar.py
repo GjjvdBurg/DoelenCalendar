@@ -1,7 +1,7 @@
 
 import icalendar
 
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 from dedoelen.core import convert
 
@@ -38,6 +38,5 @@ def make_calendar(voorstellingen):
     cal.add('method', 'REQUEST')
 
     for voorstelling in voorstellingen:
-        cal.add(convert.voorstelling2event(voorstelling))
+        cal.add_component(convert.voorstelling2event(voorstelling))
     return cal
-

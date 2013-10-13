@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 def html2voorstelling(page):
     """
     """
-    html, link = page
+    link, html = page
     soup = BeautifulSoup(html, "html.parser")
 
     if 'Concert niet gevonden' in html:
@@ -31,11 +31,9 @@ def html2voorstelling(page):
         v.title = str(v.title)
     except IndexError:
         logger.error('IndexError for link: %s' % link)
-        pass
     except UnicodeEncodeError:
         v.title = unicodedata.normalize('NFKD', v.title).encode('ascii',
                 'ignore')
-        pass
 
     # get date
     date = soup.find('dt', text="Datum").parent.findNext("dd").contents[0]
@@ -44,7 +42,6 @@ def html2voorstelling(page):
     except:
         logger.error("Ongeldige datum (%s) voor voorstelling %s" % (date,
             v.title))
-        pass
 
     # get start time
     start_tag = soup.find('dt', text='Aanvang')
@@ -57,7 +54,6 @@ def html2voorstelling(page):
         except ValueError:
             logger.error("Ongeldige aanvangstijd (%s) voor voorstelling %s" 
                     % (start_time, v.title))
-            pass
 
     end_tag = soup.find('dt', text='Eind')
     if end_tag:
@@ -74,7 +70,6 @@ def html2voorstelling(page):
         except ValueError:
             logger.error("Ongeldige eindtijd (%s) voor voorstelling %s" 
                     % (end_time, v.title))
-            pass
     else:
         v.tend = v.tstart + timedelta(hours=3)
 

@@ -9,6 +9,7 @@ import logging
 import mechanize
 import time
 
+from httplib import IncompleteRead
 from urllib2 import URLError
 
 from dedoelen.core.conf import settings
@@ -29,6 +30,41 @@ def scrape_rss():
         urls.append(entry.link)
     logger.info("Scraped %i urls from the RSS feed." % len(urls))
     return urls
+
+def get_doelen_page(browser, url):
+    """
+    """
+    while True:
+        try:
+            response = browser.open(url)
+            page = response.read()
+            if 'overlast van SPAM-bots' in page:
+                print('overlast van SPAM-bots')
+                time.sleep(10)
+                continue
+            break
+        except IncompleteRead as exc:
+            wrn = (
+                    "Er is een fout opgetreden bij het ophalen van de pagina "
+                    "(%s). We gebruiken het deel wat we wel kunnen krijgen. "
+                    "(IncompleteRead)" % url)
+            logger.warning(wrn)
+            page = exc.partial
+            if 'overlast van SPAM-bots' in page:
+                print('overlast van SPAM-bots')
+                time.sleep(10)
+                continue
+            break
+        except URLError as exc:
+            print('Fout bij %s' % url)
+            wrn = (
+                    "Er is een fout opgetreden bij het ophalen van de "
+                    "pagina (%s). We proberen het over 5 seconden opnieuw. "
+                    "De URLError is: %s" % (url, exc.reason))
+            logger.warning(wrn)
+            time.sleep(5)
+            continue
+    return page
 
 def scrape_html(urls):
     """
@@ -59,24 +95,7 @@ def scrape_html(urls):
     ophaal_progress.start()
     count = 0
     for url in urls:
-        while True:
-            try:
-                response = br.open(url)
-                page = response.read()
-                if 'overlast van SPAM-bots' in page:
-                    print('overlast van SPAM-bots')
-                    time.sleep(10)
-                    continue
-                break
-            except URLError as exc:
-                print('Fout bij %s' % url)
-                wrn = (
-                        "Er is een fout opgetreden bij het ophalen van de "
-                        "pagina (%s). We proberen het over 5 seconden opnieuw. "
-                        "De URLError is: %s" % (url, exc.reason))
-                logger.warning(wrn)
-                time.sleep(5)
-                continue
+        page = get_doelen_page(br, url)
         pages.append((url, page))
         logger.info("Successfully scraped url: %s" % url)
         count += 1

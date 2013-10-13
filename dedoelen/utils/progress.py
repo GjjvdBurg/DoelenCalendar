@@ -5,7 +5,7 @@ class AdaptiveETA(Timer):
     """
     """
     TIME_SENSITIVE = True
-    NUM_SAMPLES = 10
+    NUM_SAMPLES = 20
 
     def _update_samples(self, currval, elapsed):
         sample = (currval, elapsed)
