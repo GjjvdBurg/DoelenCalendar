@@ -14,7 +14,12 @@ from dedoelen.core.models import Voorstelling
 def voorstelling2event(voorstelling):
     """
         Convert a :class:`dedoelen.core.models.Voorstelling` instance to an
-        :class:`icalendar.Event` instance.
+        :class:`icalendar.Event` instance. The uid of the event is the hash of
+        the event URL. Hence, we assume that if the event changes, the URL stays
+        the same. This allows us to update an event in the calendar by changing
+        everything, but keeping the same UID ensures the calendar application
+        can still identify the event as merely changed (not added new). When an
+        event is changed the sequence must be increased.
 
         :param voorstelling: event in De Doelen
         :type voorstelling: :class:`dedoelen.core.models.Voorstelling`
@@ -26,7 +31,7 @@ def voorstelling2event(voorstelling):
     event.add('dtstart', voorstelling.tstart)
     event.add('dtend', voorstelling.tend)
     event.add('dtstamp', datetime.datetime.now(settings.AMSTERDAM))
-    event['uid'] = str(hash(voorstelling))+'@doelenics.nl'
+    event['uid'] = str(hash(voorstelling.link))+'@doelenics.nl'
     event.add('last-modified', datetime.datetime.now(settings.AMSTERDAM))
     event.add('description', '\n'.join([voorstelling.description,
         voorstelling.link]))
@@ -57,5 +62,8 @@ def event2voorstelling(event):
         voorstelling.description = '\n'.join(desc.split('\\n')[:-1])
     else:
         voorstelling.description = '\n'.join(desc.split('\n')[:-1])
+    voorstelling.description = voorstelling.description.replace('\\n','\n')
+    voorstelling.description = voorstelling.description.replace('\\,',',')
+    voorstelling.description = voorstelling.description.replace('\\;',';')
     voorstelling.sequence = int(event['sequence'])
     return voorstelling

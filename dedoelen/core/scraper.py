@@ -21,6 +21,7 @@ def scrape_rss():
     """
         Scrape the RSS feed for urls. All urls are collected and returned.
 
+        :raises ValueError: when no urls are found in the feed.
         :returns: urls scraped from RSS feed
         :rtype: list
     """
@@ -29,6 +30,9 @@ def scrape_rss():
     for entry in feed.entries:
         urls.append(entry.link)
     logger.info("Scraped %i urls from the RSS feed." % len(urls))
+    if len(urls) == 0:
+        logger.critical("No urls found on RSS feed.")
+        raise SystemExit
     return urls
 
 def get_doelen_page(browser, url):
@@ -46,15 +50,11 @@ def get_doelen_page(browser, url):
         except IncompleteRead as exc:
             wrn = (
                     "Er is een fout opgetreden bij het ophalen van de pagina "
-                    "(%s). We gebruiken het deel wat we wel kunnen krijgen. "
+                    "(%s). We proberen het over 5 seconden opnieuw. "
                     "(IncompleteRead)" % url)
             logger.warning(wrn)
-            page = exc.partial
-            if 'overlast van SPAM-bots' in page:
-                print('overlast van SPAM-bots')
-                time.sleep(10)
-                continue
-            break
+            time.sleep(5)
+            continue
         except URLError as exc:
             print('Fout bij %s' % url)
             wrn = (

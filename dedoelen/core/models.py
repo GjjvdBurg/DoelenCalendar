@@ -58,5 +58,10 @@ class Voorstelling(object):
         return hash(self) == hash(other)
 
     def __hash__(self):
-        return hash(self.link)
+        h = hash(self.link)
+        h ^= hash(self.tstart)
+        h ^= hash(self.tend)
+        h ^= hash(self.room)
+        h ^= hash(self.description)
+        return h
 

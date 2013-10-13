@@ -49,8 +49,9 @@ def html2voorstelling(page):
         start_time = start_tag.findNextSiblings("dd")[0].contents[0]
         try:
             start_t = datetime.strptime(start_time, "%H.%M uur").time()
-            v.tstart = datetime(date.year, date.month, date.day, start_t.hour,
-                    start_t.minute, tzinfo=settings.AMSTERDAM)
+            t = datetime(date.year, date.month, date.day, start_t.hour,
+                    start_t.minute)
+            v.tstart = settings.AMSTERDAM.localize(t)
         except ValueError:
             logger.error("Ongeldige aanvangstijd (%s) voor voorstelling %s" 
                     % (start_time, v.title))
@@ -62,11 +63,13 @@ def html2voorstelling(page):
             end_t = datetime.strptime(end_time, "%H.%M uur").time()
             if end_t < start_t:
                 newdate = date + timedelta(hours=24)
-                v.tend = datetime(newdate.year, newdate.month, newdate.day,
-                        end_t.hour, end_t.minute, tzinfo=settings.AMSTERDAM)
+                t = datetime(newdate.year, newdate.month, newdate.day,
+                        end_t.hour, end_t.minute)
+                v.tend = settings.AMSTERDAM.localize(t)
             else:
-                v.tend = datetime(date.year, date.month, date.day, end_t.hour,
-                        end_t.minute, tzinfo=settings.AMSTERDAM)
+                t = datetime(date.year, date.month, date.day, end_t.hour,
+                        end_t.minute)
+                v.tend = settings.AMSTERDAM.localize(t)
         except ValueError:
             logger.error("Ongeldige eindtijd (%s) voor voorstelling %s" 
                     % (end_time, v.title))
@@ -86,7 +89,7 @@ def html2voorstelling(page):
         logger.info("No performers found at link: %s" % link)
         perf = ""
     if desc_tag:
-        desc = html2text(desc_tag.encode("ascii"))
+        desc = html2text(desc_tag.encode("ascii").replace('\\n','\n'))
     else:
         logger.info("No description found at link: %s" % link)
         desc = ""

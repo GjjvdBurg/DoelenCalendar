@@ -7,6 +7,7 @@ import dedoelen
 from dedoelen.core import calendar
 from dedoelen.core import scraper
 from dedoelen.core import parser
+from dedoelen.core import update
 from dedoelen.core.conf import settings
 from dedoelen.utils.localize import set_locale
 from dedoelen.utils.log import init_logger
@@ -45,7 +46,13 @@ class Main(object):
         self.write_cal(cal)
 
     def update(self):
-        pass
+        urls = scraper.scrape_rss()
+        urls = urls[:20]
+        pages = scraper.scrape_html(urls)
+        voorstellingen = [parser.html2voorstelling(x) for x in pages]
+        voorstellingen = update.update_voorstellingen(voorstellingen)
+        cal = calendar.make_calendar(voorstellingen)
+        self.write_cal(cal)
 
     def write_cal(self, calendar):
         with open(settings.OUTFILE, "wb") as fid:
