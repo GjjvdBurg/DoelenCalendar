@@ -40,16 +40,18 @@ class Main(object):
 
     def initialize(self):
         urls = scraper.scrape_rss()
+        urls = urls[:20]
         pages = scraper.scrape_html(urls)
         voorstellingen = [parser.html2voorstelling(x) for x in pages]
+        voorstellingen = [x for x in voorstellingen if x is not None]
         cal = calendar.make_calendar(voorstellingen)
         self.write_cal(cal)
 
     def update(self):
         urls = scraper.scrape_rss()
-        urls = urls[:20]
         pages = scraper.scrape_html(urls)
         voorstellingen = [parser.html2voorstelling(x) for x in pages]
+        voorstellingen = [x for x in voorstellingen if x is not None]
         voorstellingen = update.update_voorstellingen(voorstellingen)
         cal = calendar.make_calendar(voorstellingen)
         self.write_cal(cal)

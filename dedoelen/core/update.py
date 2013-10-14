@@ -17,23 +17,6 @@ def update_voorstellingen(voorstellingen):
             previous_cal.walk("VEVENT")]
     logger.info("Loaded %i previous events." % len(prev_v))
 
-    for pv, v in zip(sorted(prev_v), sorted(voorstellingen)):
-        print '='*50
-        print '%s || %s' % (pv.title, v.title)
-        print 'Title:', pv.title == v.title
-        print 'Link:', pv.link == v.link
-        print 'StartT: %s || %s (%s)' % (pv.tstart, v.tstart, str(pv.tstart ==
-            v.tstart))
-        print 'EndT:', pv.tend == v.tend
-        print 'Room:', pv.room == v.room
-        print 'Desc:', pv.description == v.description
-        print 'Hash: %i || %i (%s)' % (hash(pv), hash(v), str(hash(pv) ==
-            hash(v)))
-        if pv.description != v.description:
-            print pv.description
-            print '%%' * 10
-            print v.description
-
     prev_links = [x.link for x in prev_v]
     # previously unseen links are new by definition
     nieuw_toegevoegd = [x for x in voorstellingen if x.link not in prev_links]
