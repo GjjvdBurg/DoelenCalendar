@@ -18,6 +18,11 @@ class Main(object):
         self.version = dedoelen.get_version()
 
     def parse_cmdline(self):
+        """ 
+            Parse the commandline arguments. Verbosity is translated as the
+            logger flushlevel. Two actions are possible: 'init' creates an
+            entirely new calendar, and 'update' updates an existing one.
+        """
         argp = argparse.ArgumentParser()
         argp.add_argument("action", 
                 help="specify the action to perform (init|update)")
@@ -39,8 +44,10 @@ class Main(object):
             raise ValueError("action can be either 'init' or 'update'")
 
     def initialize(self):
+        """
+            Initialize a new calendar.
+        """
         urls = scraper.scrape_rss()
-        urls = urls[:20]
         pages = scraper.scrape_html(urls)
         voorstellingen = [parser.html2voorstelling(x) for x in pages]
         voorstellingen = [x for x in voorstellingen if x is not None]
@@ -48,6 +55,9 @@ class Main(object):
         self.write_cal(cal)
 
     def update(self):
+        """
+            Update an existing calendar.
+        """
         urls = scraper.scrape_rss()
         pages = scraper.scrape_html(urls)
         voorstellingen = [parser.html2voorstelling(x) for x in pages]
@@ -57,6 +67,12 @@ class Main(object):
         self.write_cal(cal)
 
     def write_cal(self, calendar):
+        """
+            Write calendar to file.
+
+            :param calendar: calendar object that is written to a file
+            :type calendar: :class:`icalendar.Calendar`
+        """
         with open(settings.OUTFILE, "wb") as fid:
             fid.write(calendar.to_ical())
 
@@ -66,5 +82,3 @@ class Main(object):
         except KeyboardInterrupt:
             print("*** interrupted")
             return 2
-
-

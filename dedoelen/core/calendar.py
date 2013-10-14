@@ -7,6 +7,14 @@ from dedoelen.core import convert
 
 def make_calendar(voorstellingen):
     """
+        Create a :class:`icalendar.Calendar` instance from a list of
+        :class:`dedoelen.core.models.Voorstelling` instances. The timezone
+        information is set for the Amsterdam timezone (DST is incorporated).
+
+        :param voorstellingen: events that need to be in the calendar
+        :type voorstellingen: list
+        :returns: calendar instance
+        :rtype: :class:`icalendar.Calendar`
     """
     cal = icalendar.Calendar()
     cal.add('prodid', '-// Calendar for events in De Doelen//NL')

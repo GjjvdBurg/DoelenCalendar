@@ -13,6 +13,16 @@ logger = logging.getLogger(__name__)
 
 def html2voorstelling(page):
     """
+        Convert a scraped html page to a
+        :class:`dedoelen.core.models.Voorstelling` instance. Pages that can not
+        be parsed properly are ignored, and None is returned. Text entries are
+        converted to ascii, and special characters are ignored. Events that have
+        no start time are also ignored (None is returned).
+
+        :param page: tuple of the page url and the page html
+        :type page: tuple
+        :returns: representation of the event
+        :rtype: :class:`dedoelen.core.models.Voorstelling`
     """
     link, html = page
     soup = BeautifulSoup(html, "html.parser")
@@ -55,7 +65,8 @@ def html2voorstelling(page):
         except ValueError:
             logger.error("Ongeldige aanvangstijd (%s) voor voorstelling %s" 
                     % (start_time, v.title))
-
+    
+    # get end tag. Correct for events that end after 0:00.
     end_tag = soup.find('dt', text='Eind')
     if end_tag:
         end_time = end_tag.findNextSiblings("dd")[0].contents[0]
@@ -80,7 +91,9 @@ def html2voorstelling(page):
     if room_tag:
         v.room = room_tag.findNextSiblings("dd")[0].contents[0]
         v.room = unicodedata.normalize('NFKD', v.room).encode('ascii', 'ignore')
-
+    
+    # performers and the event description are both convert to markdown using
+    # html2text. They are then combined and converted to ascii.
     perf_tag = soup.find(id="performers")
     desc_tag = soup.find(id="description")
     if perf_tag:

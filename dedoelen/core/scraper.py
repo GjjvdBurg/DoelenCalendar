@@ -37,6 +37,24 @@ def scrape_rss():
 
 def get_doelen_page(browser, url):
     """
+        Get a single page from the web. Several warnings can occur in this
+        process. An :class:`httplib.IncompleteRead` exception occurs when the
+        request to the server is not completed, in this case a 5 second wait is
+        allowed and the error is logged. After the wait the attempt is repeated.
+        An :class:`urllib2.URLError` can also occur, it is handled in the same
+        manner. Finally, a SPAM-bot page can be shown, which can happen when too
+        many requests are made to the server. Luckily, this page includes the
+        cookies required for a valid request, so when this page is encountered
+        the next attempts do not suffer. To be fair, a 10 second wait is
+        included after this error. When a page is retrieved succesfully, the
+        loop breaks.
+
+        :param browser: initialized browser instance
+        :type browser: :class:`mechanize.Browser`
+        :param url: url of the web page we want
+        :type url: str
+        :returns: webpage
+        :rtype: str
     """
     while True:
         try:
@@ -71,7 +89,8 @@ def scrape_html(urls):
         Get all pages given by the :attr:`urls`. If the server returns an error
         when too many requests are placed, a 10 second wait is performed. If an
         error occurs when getting the page a 5 second wait is performed and a
-        warning is logged. All pages are returned as (page, url) tuples.
+        warning is logged. All pages are returned as (url, page) tuples. A
+        progress bar is printed to show the total number of pages retrieved.
 
         :param urls: urls of De Doelen events
         :type urls: list
