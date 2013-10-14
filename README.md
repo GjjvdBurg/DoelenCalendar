@@ -19,5 +19,4 @@ Execute the program using
 ```bash
 python DoelenCalendar.py -h
 ```
-for more help. Full documentation of the program can be found [here](DoelenCalendar.pdf).
-
+for more help. Full documentation of the program can be found in the [documentation](docs/_build/latex/DoelenCalendar.pdf).
