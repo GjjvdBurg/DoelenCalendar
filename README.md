@@ -14,7 +14,7 @@ This code is released under the GPL License (v2) (see LICENSE).
 Usage
 -----
 
-Specify a location for the output file in [dedoelen.core.conf](conf.py).
+Specify a location for the output file in [dedoelen/core/conf.py](conf.py).
 Execute the program using
 ```bash
 python DoelenCalendar.py -h
