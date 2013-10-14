@@ -6,18 +6,77 @@
 Welcome to DoelenCalendar's documentation!
 ==========================================
 
-Contents:
-
 .. toctree::
-        :maxdepth: 3
+        :maxdepth: 4
 
-        rst/modules 
+Core
+====
+
+Calendar
+--------
+.. automodule:: dedoelen.core.calendar
+   :members:
+
+Conf
+----
+.. automodule:: dedoelen.core.conf
+   :members:
+
+Convert
+-------
+.. automodule:: dedoelen.core.convert
+   :members:
+
+Models
+------
+.. automodule:: dedoelen.core.models
+   :members:
+
+Parser
+------
+.. automodule:: dedoelen.core.parser
+   :members:
+
+Scraper
+-------
+.. automodule:: dedoelen.core.scraper
+   :members:
+
+Update
+------
+.. automodule:: dedoelen.core.update
+   :members:
 
 
-Indices and tables
-==================
+User Interface
+==============
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Command Line
+------------
+.. automodule:: dedoelen.ui.cmd
+   :members:
+
+
+Utils
+=====
+
+Localize
+--------
+.. automodule:: dedoelen.utils.localize
+   :members:
+
+Log
+---
+.. automodule:: dedoelen.utils.log
+   :members:
+
+Progress
+--------
+.. automodule:: dedoelen.utils.progress
+   :members:
+
+Version
+-------
+.. automodule:: dedoelen.utils.version
+   :members:
 
