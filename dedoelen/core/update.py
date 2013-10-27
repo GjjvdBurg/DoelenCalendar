@@ -34,7 +34,7 @@ def update_voorstellingen(voorstellingen):
             previous_cal.walk("VEVENT")]
     logger.info("Loaded %i previous events." % len(prev_v))
 
-    old_v = [x for x in prev_v if x.tstart.date() < datetime.now()]
+    old_v = [x for x in prev_v if x.tstart.date() < datetime.datetime.now()]
     logger.info("Found %i past events." % len(old_v))
     # previously unseen links are new by definition
     prev_links = [x.link for x in prev_v]
