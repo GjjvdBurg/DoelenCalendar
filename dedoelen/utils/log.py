@@ -2,15 +2,19 @@ import logging
 import logging.handlers
 import sys
 
-def init_logger(flushlevel):
+def init_logger(flushlevel, logfile=None):
     """
     """
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    stream = logging.StreamHandler(stream=sys.stderr)
-    stream.setFormatter(formatter)
+    if not logfile is None:
+        logstream = logging.StreamHandler(stream=sys.stdout)
+        logstream.setFormatter(formatter)
+    else:
+        logstream = logging.FileHandler(logfile)
+        logstream.setFormatter(formatter)
 
     if flushlevel == 'INFO':
         flushlvl = logging.INFO
@@ -23,5 +27,5 @@ def init_logger(flushlevel):
     elif flushlevel == 'CRITICAL':
         flushlvl = logging.CRITICAL
 
-    mem = logging.handlers.MemoryHandler(1024*10, flushlvl, target=stream)
+    mem = logging.handlers.MemoryHandler(1024*10, flushlvl, target=logstream)
     logger.addHandler(mem)

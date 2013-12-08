@@ -28,11 +28,13 @@ class Main(object):
                 help="specify the action to perform (init|update)")
         argp.add_argument("-v", "--verbose", action="store_true", 
                 help="increase output verbosity")
+        argp.add_argument("-l", "--logfile", type=str, 
+                help="logfile to write to")
         args = argp.parse_args()
         if args.verbose:
-            init_logger("INFO")
+            init_logger("INFO", logfile=args.logfile)
         else:
-            init_logger("ERROR")
+            init_logger("ERROR", logfile=args.logfile)
         logger = logging.getLogger(__name__)
         if args.action == 'init':
             logger.info("Running action initialize")
