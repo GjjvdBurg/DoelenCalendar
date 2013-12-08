@@ -94,8 +94,15 @@ def html2voorstelling(page):
     
     # performers and the event description are both convert to markdown using
     # html2text. They are then combined and converted to ascii.
+    prog_tag = soup.find(id="programme")
     perf_tag = soup.find(id="performers")
     desc_tag = soup.find(id="description")
+    other_tag = soup.find(id="crossVoorstellingen")
+    if prog_tag:
+        prog = html2text(prog_tag.encode("ascii"))
+    else:
+        logger.info("No programme found at link: %s" % link)
+        prog = ""
     if perf_tag:
         perf = html2text(perf_tag.encode("ascii"))
     else:
@@ -106,8 +113,12 @@ def html2voorstelling(page):
     else:
         logger.info("No description found at link: %s" % link)
         desc = ""
+    if other_tag:
+        other = html2text(other_tag.encode("ascii"))
+    else:
+        other = ""
 
-    v.description = '\n'.join([perf, desc])
+    v.description = '\n'.join([prog, perf, desc, other])
     v.description = unicodedata.normalize('NFKD', v.description).encode('ascii',
             'ignore')
 
