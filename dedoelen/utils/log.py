@@ -9,7 +9,7 @@ def init_logger(flushlevel, logfile=None):
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    if not logfile is None:
+    if logfile is None:
         logstream = logging.StreamHandler(stream=sys.stdout)
         logstream.setFormatter(formatter)
     else:
